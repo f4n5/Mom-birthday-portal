@@ -20,10 +20,10 @@
       padding: 22px;
       overflow-x: hidden;
       font-family: "Trebuchet MS", Arial, sans-serif;
-      color: #fff;
+      color: white;
       background:
-        radial-gradient(circle at 15% 15%, #ff9bd7 0, transparent 30%),
-        radial-gradient(circle at 85% 80%, #a98bff 0, transparent 35%),
+        radial-gradient(circle at 15% 15%, #ff9bd7, transparent 30%),
+        radial-gradient(circle at 85% 80%, #a98bff, transparent 35%),
         linear-gradient(135deg, #7025a8, #c02b9c, #7026b8);
     }
 
@@ -94,8 +94,12 @@
     }
 
     @keyframes catBounce {
-      0%, 100% { transform: translateY(0) rotate(-3deg); }
-      50% { transform: translateY(-8px) rotate(3deg); }
+      0%, 100% {
+        transform: translateY(0) rotate(-3deg);
+      }
+      50% {
+        transform: translateY(-8px) rotate(3deg);
+      }
     }
 
     h1 {
@@ -181,9 +185,17 @@
     }
 
     @media (max-width: 380px) {
-      .card { padding: 28px 17px; }
-      .number { font-size: 29px; }
-      .time-box { padding: 14px 3px; }
+      .card {
+        padding: 28px 17px;
+      }
+
+      .number {
+        font-size: 29px;
+      }
+
+      .time-box {
+        padding: 14px 3px;
+      }
     }
   </style>
 </head>
@@ -200,8 +212,7 @@
     <h1>¡Feliz cumpleaños, mamá!</h1>
 
     <p class="subtitle">
-      Hay una pequeña sorpresa esperando por ti...
-      💗<br>
+      Hay una pequeña sorpresa esperando por ti... 💗<br>
       Espero que te saque una sonrisa y te recuerde
       lo mucho que te quiero.
     </p>
@@ -237,34 +248,44 @@
   </main>
 
   <script>
-    // ========================================
-    // CONFIGURACIÓN DE LA SORPRESA
-    // ========================================
+    // =====================================
+    // CONFIGURACIÓN
+    // =====================================
 
-    // Pon aquí la URL de tu otra página:
-    const DESTINATION_URL = "https://f4n5.github.io/Mom-birthday/";
+    // REEMPLAZA ESTA URL POR LA DE TU SORPRESA
+    const DESTINATION_URL = "https://example.com";
 
-    // Hora de la sorpresa: 18:40 (6:40 PM).
-    // Usa la hora local del dispositivo que abre la página.
+    // HORA DE REDIRECCIÓN: 7:00 PM
     const TARGET_HOUR = 19;
-    const TARGET_MINUTE = 10;
+    const TARGET_MINUTE = 0;
 
-    // ========================================
+    // =====================================
     // CUENTA REGRESIVA
-    // ========================================
+    // =====================================
 
     const $ = id => document.getElementById(id);
+
     let redirected = false;
 
     function updateCountdown() {
+      if (redirected) return;
+
       const now = new Date();
       const target = new Date(now);
 
       target.setHours(TARGET_HOUR, TARGET_MINUTE, 0, 0);
 
-      // Si ya pasó la hora de hoy, espera hasta mañana.
-      if (target.getTime() <= now.getTime()) {
-        target.setDate(target.getDate() + 1);
+      // Si ya son las 19:00 o más, redirigir inmediatamente.
+      if (now.getTime() >= target.getTime()) {
+        redirected = true;
+
+        $("hours").textContent = "00";
+        $("minutes").textContent = "00";
+        $("seconds").textContent = "00";
+        $("message").textContent = "¡Llegó el momento! 💝";
+
+        window.location.replace(DESTINATION_URL);
+        return;
       }
 
       const difference = target.getTime() - now.getTime();
@@ -276,27 +297,18 @@
       $("hours").textContent = String(hours).padStart(2, "0");
       $("minutes").textContent = String(minutes).padStart(2, "0");
       $("seconds").textContent = String(seconds).padStart(2, "0");
-
-      // Comprobar si se alcanzó la hora objetivo de hoy.
-      const todayTarget = new Date(now);
-      todayTarget.setHours(TARGET_HOUR, TARGET_MINUTE, 0, 0);
-
-      if (now.getTime() >= todayTarget.getTime() && !redirected) {
-        redirected = true;
-        $("message").textContent = "¡Llegó el momento! 💝";
-        window.location.href = DESTINATION_URL;
-      }
     }
 
-    // ========================================
-    // ESTRELLITAS FLOTANTES
-    // ========================================
+    // =====================================
+    // DECORACIONES FLOTANTES
+    // =====================================
 
     const decorations = ["✦", "♡", "✧", "💗", "🐾", "✨"];
     const sparkleContainer = $("sparkles");
 
     for (let i = 0; i < 28; i++) {
       const sparkle = document.createElement("span");
+
       sparkle.className = "sparkle";
       sparkle.textContent =
         decorations[Math.floor(Math.random() * decorations.length)];
@@ -304,7 +316,7 @@
       sparkle.style.left = Math.random() * 100 + "%";
       sparkle.style.top = Math.random() * 100 + "%";
       sparkle.style.fontSize = (12 + Math.random() * 16) + "px";
-      sparkle.style.animationDelay = (Math.random() * 5) + "s";
+      sparkle.style.animationDelay = Math.random() * 5 + "s";
       sparkle.style.animationDuration = (3 + Math.random() * 5) + "s";
 
       sparkleContainer.appendChild(sparkle);
